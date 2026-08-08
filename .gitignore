@@ -30,5 +30,7 @@ Thumbs.db
 chroma_db/
 chroma/
 
-# Generated indexes
+# Generated files
+data/attention_is_all_you_need.txt
+data/kg_triples.json
 data/entity_index.json
