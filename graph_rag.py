@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 
 import networkx as nx
@@ -36,7 +37,7 @@ SEED_K = int(
 )
 
 MAX_HOPS = int(
-    os.getenv("GRAPH_MAX_HOPS", "1")
+    os.getenv("GRAPH_MAX_HOPS", "2")
 )
 
 MAX_TRIPLES = int(
@@ -51,6 +52,29 @@ TOP_P = float(
     os.getenv("TOP_P", "0.3")
 )
 
+TRIPLE_SIM_WEIGHT = float(
+    os.getenv(
+        "GRAPH_TRIPLE_SIM_WEIGHT",
+        "0.7",
+    )
+)
+
+SEED_SCORE_WEIGHT = float(
+    os.getenv(
+        "GRAPH_SEED_SCORE_WEIGHT",
+        "0.3",
+    )
+)
+
+HOP_PENALTY = float(
+    os.getenv(
+        "GRAPH_HOP_PENALTY",
+        "0.05",
+    )
+)
+
+TRIPLE_EMBEDDING_CACHE = {}
+
 
 # --------------------------------------------------
 # 1. Load Knowledge Graph
@@ -59,7 +83,7 @@ TOP_P = float(
 def load_triples():
     with KG_PATH.open(
         "r",
-        encoding="utf-8"
+        encoding="utf-8",
     ) as file:
         return json.load(file)
 
@@ -68,7 +92,6 @@ def build_graph(triples):
     graph = nx.MultiDiGraph()
 
     for triple_id, triple in enumerate(triples):
-
         subject = triple["subject"]
         predicate = triple["predicate"]
         obj = triple["object"]
@@ -85,7 +108,7 @@ def build_graph(triples):
 
 
 # --------------------------------------------------
-# 2. Entity Embeddings
+# 2. Embeddings
 # --------------------------------------------------
 
 def get_embeddings(texts):
@@ -132,9 +155,7 @@ def build_entity_index(graph):
 
 
 def load_or_create_entity_index(graph):
-
     if ENTITY_INDEX_PATH.exists():
-
         print(
             f"Loading existing entity index "
             f"from {ENTITY_INDEX_PATH}..."
@@ -150,7 +171,7 @@ def load_or_create_entity_index(graph):
 
 
 # --------------------------------------------------
-# 3. Find Seed Entities
+# 3. Similarity Helpers
 # --------------------------------------------------
 
 def cosine_similarity(
@@ -186,18 +207,92 @@ def cosine_similarity(
     return scores
 
 
-def find_seed_entities(
+def normalize_text(text):
+    text = text.lower()
+
+    text = re.sub(
+        r"[‐‑‒–—−]",
+        "-",
+        text,
+    )
+
+    text = text.replace(
+        "’",
+        "'",
+    )
+
+    text = re.sub(
+        r"[^a-z0-9\s\-']",
+        " ",
+        text,
+    )
+
+    text = re.sub(
+        r"\s+",
+        " ",
+        text,
+    ).strip()
+
+    return text
+
+
+# --------------------------------------------------
+# 4. Hybrid Entity Linking
+# --------------------------------------------------
+
+def find_lexical_entities(
     query,
-    entity_index,
-    top_k=5,
+    entities,
 ):
+    normalized_query = normalize_text(
+        query
+    )
 
-    query_embedding = get_embeddings(
-        [query]
-    )[0]
+    matches = []
 
-    entities = entity_index["entities"]
-    embeddings = entity_index["embeddings"]
+    for entity in entities:
+        normalized_entity = (
+            normalize_text(entity)
+        )
+
+        if len(normalized_entity) < 4:
+            continue
+
+        if normalized_entity in normalized_query:
+            matches.append(
+                {
+                    "entity": entity,
+                    "score": 1.0,
+                    "method": "lexical",
+                }
+            )
+
+    matches.sort(
+        key=lambda item: (
+            -len(
+                normalize_text(
+                    item["entity"]
+                )
+            ),
+            item["entity"].lower(),
+        )
+    )
+
+    return matches
+
+
+def find_semantic_entities(
+    query_embedding,
+    entity_index,
+    top_k=SEED_K,
+):
+    entities = entity_index[
+        "entities"
+    ]
+
+    embeddings = entity_index[
+        "embeddings"
+    ]
 
     scores = cosine_similarity(
         query_embedding,
@@ -211,30 +306,118 @@ def find_seed_entities(
     results = []
 
     for index in top_indices:
-
         results.append(
             {
                 "entity": entities[index],
                 "score": float(
                     scores[index]
                 ),
+                "method": "semantic",
             }
         )
 
     return results
 
 
+def find_seed_entities(
+    query,
+    entity_index,
+    top_k=SEED_K,
+):
+    query_embedding = get_embeddings(
+        [query]
+    )[0]
+
+    entities = entity_index[
+        "entities"
+    ]
+
+    lexical_results = (
+        find_lexical_entities(
+            query=query,
+            entities=entities,
+        )
+    )
+
+    semantic_results = (
+        find_semantic_entities(
+            query_embedding=query_embedding,
+            entity_index=entity_index,
+            top_k=top_k,
+        )
+    )
+
+    merged = {}
+
+    for item in semantic_results:
+        merged[item["entity"]] = item
+
+    for item in lexical_results:
+        merged[item["entity"]] = item
+
+    results = list(
+        merged.values()
+    )
+
+    results.sort(
+        key=lambda item: (
+            0
+            if item["method"] == "lexical"
+            else 1,
+            -item["score"],
+        )
+    )
+
+    return (
+        results,
+        query_embedding,
+    )
+
+
 # --------------------------------------------------
-# 4. Traverse Knowledge Graph
+# 5. Graph Expansion
 # --------------------------------------------------
+
+def add_candidate(
+    retrieved,
+    triple_id,
+    subject,
+    predicate,
+    obj,
+    hop,
+    seed_score,
+):
+    candidate = {
+        "triple_id": triple_id,
+        "subject": subject,
+        "predicate": predicate,
+        "object": obj,
+        "hop": hop,
+        "seed_score": seed_score,
+    }
+
+    if triple_id not in retrieved:
+        retrieved[triple_id] = candidate
+        return
+
+    existing = retrieved[triple_id]
+
+    existing["hop"] = min(
+        existing["hop"],
+        hop,
+    )
+
+    existing["seed_score"] = max(
+        existing["seed_score"],
+        seed_score,
+    )
+
 
 def traverse_graph(
     graph,
     seed_entities,
-    max_hops=1,
-    max_triples=20,
+    max_hops=MAX_HOPS,
 ):
-
     retrieved = {}
     visited_nodes = set()
 
@@ -243,18 +426,18 @@ def traverse_graph(
         for item in seed_entities
     }
 
-    for hop in range(max_hops):
-
+    for hop in range(
+        1,
+        max_hops + 1,
+    ):
         next_frontier = {}
 
         for node, seed_score in frontier.items():
-
             if node in visited_nodes:
                 continue
 
             visited_nodes.add(node)
 
-            # Incoming edges
             for (
                 source,
                 target,
@@ -265,31 +448,29 @@ def traverse_graph(
                 keys=True,
                 data=True,
             ):
+                triple_id = data["triple_id"]
 
-                triple_id = data[
-                    "triple_id"
-                ]
+                add_candidate(
+                    retrieved=retrieved,
+                    triple_id=triple_id,
+                    subject=source,
+                    predicate=data["predicate"],
+                    obj=target,
+                    hop=hop,
+                    seed_score=seed_score,
+                )
 
-                retrieved[triple_id] = {
-                    "triple_id": triple_id,
-                    "subject": source,
-                    "predicate": data[
-                        "predicate"
-                    ],
-                    "object": target,
-                    "hop": hop + 1,
-                    "seed_score": seed_score,
-                }
-
-                if (
-                    source
-                    not in visited_nodes
-                ):
+                if source not in visited_nodes:
                     next_frontier[
                         source
-                    ] = seed_score
+                    ] = max(
+                        next_frontier.get(
+                            source,
+                            0.0,
+                        ),
+                        seed_score,
+                    )
 
-            # Outgoing edges
             for (
                 source,
                 target,
@@ -300,48 +481,160 @@ def traverse_graph(
                 keys=True,
                 data=True,
             ):
+                triple_id = data["triple_id"]
 
-                triple_id = data[
-                    "triple_id"
-                ]
+                add_candidate(
+                    retrieved=retrieved,
+                    triple_id=triple_id,
+                    subject=source,
+                    predicate=data["predicate"],
+                    obj=target,
+                    hop=hop,
+                    seed_score=seed_score,
+                )
 
-                retrieved[triple_id] = {
-                    "triple_id": triple_id,
-                    "subject": source,
-                    "predicate": data[
-                        "predicate"
-                    ],
-                    "object": target,
-                    "hop": hop + 1,
-                    "seed_score": seed_score,
-                }
-
-                if (
-                    target
-                    not in visited_nodes
-                ):
+                if target not in visited_nodes:
                     next_frontier[
                         target
-                    ] = seed_score
+                    ] = max(
+                        next_frontier.get(
+                            target,
+                            0.0,
+                        ),
+                        seed_score,
+                    )
 
         frontier = next_frontier
 
-    results = list(
+    return list(
         retrieved.values()
     )
 
-    results.sort(
-        key=lambda item: (
-            item["hop"],
-            -item["seed_score"],
+
+# --------------------------------------------------
+# 6. Query-Aware Triple Reranking
+# --------------------------------------------------
+
+def triple_to_text(triple):
+    return (
+        f"{triple['subject']} "
+        f"{triple['predicate']} "
+        f"{triple['object']}"
+    )
+
+
+def get_cached_triple_embeddings(
+    triple_texts
+):
+    missing = [
+        text
+        for text in triple_texts
+        if text not in TRIPLE_EMBEDDING_CACHE
+    ]
+
+    if missing:
+        new_embeddings = get_embeddings(
+            missing
+        )
+
+        for text, embedding in zip(
+            missing,
+            new_embeddings,
+        ):
+            TRIPLE_EMBEDDING_CACHE[
+                text
+            ] = embedding
+
+    return [
+        TRIPLE_EMBEDDING_CACHE[
+            text
+        ]
+        for text in triple_texts
+    ]
+
+
+def rerank_triples(
+    query_embedding,
+    candidate_triples,
+    max_triples=MAX_TRIPLES,
+):
+    if not candidate_triples:
+        return []
+
+    triple_texts = [
+        triple_to_text(triple)
+        for triple in candidate_triples
+    ]
+
+    triple_embeddings = (
+        get_cached_triple_embeddings(
+            triple_texts
         )
     )
 
-    return results[:max_triples]
+    semantic_scores = (
+        cosine_similarity(
+            query_embedding,
+            triple_embeddings,
+        )
+    )
+
+    reranked = []
+
+    for triple, semantic_score in zip(
+        candidate_triples,
+        semantic_scores,
+    ):
+        hop_penalty = (
+            HOP_PENALTY
+            * max(
+                triple["hop"] - 1,
+                0,
+            )
+        )
+
+        final_score = (
+            TRIPLE_SIM_WEIGHT
+            * float(semantic_score)
+            + SEED_SCORE_WEIGHT
+            * triple["seed_score"]
+            - hop_penalty
+        )
+
+        ranked_triple = dict(
+            triple
+        )
+
+        ranked_triple[
+            "semantic_score"
+        ] = float(
+            semantic_score
+        )
+
+        ranked_triple[
+            "final_score"
+        ] = float(
+            final_score
+        )
+
+        reranked.append(
+            ranked_triple
+        )
+
+    reranked.sort(
+        key=lambda item: (
+            -item["final_score"],
+            item["hop"],
+        )
+    )
+
+    return reranked[
+        :max_triples
+    ]
 
 
 # --------------------------------------------------
-# 5. Retrieve Relevant Triples
+# 7. Complete Retrieval Pipeline
 # --------------------------------------------------
 
 def retrieve_triples(
@@ -352,45 +645,44 @@ def retrieve_triples(
     max_hops=MAX_HOPS,
     max_triples=MAX_TRIPLES,
 ):
-
-    seed_entities = find_seed_entities(
+    (
+        seed_entities,
+        query_embedding,
+    ) = find_seed_entities(
         query=query,
         entity_index=entity_index,
         top_k=seed_k,
     )
 
-    retrieved_triples = traverse_graph(
+    candidate_triples = traverse_graph(
         graph=graph,
         seed_entities=seed_entities,
         max_hops=max_hops,
+    )
+
+    retrieved_triples = rerank_triples(
+        query_embedding=query_embedding,
+        candidate_triples=candidate_triples,
         max_triples=max_triples,
     )
 
     return (
         seed_entities,
+        candidate_triples,
         retrieved_triples,
     )
 
 
 # --------------------------------------------------
-# 6. Prepare Triple Citations
+# 8. Format Triples for Prompt
 # --------------------------------------------------
 
 def format_triples_for_prompt(
     triples
 ):
     lines = []
-    citation_map = {}
 
-    for index, triple in enumerate(
-        triples,
-        start=1,
-    ):
-
-        citation_id = (
-            f"T{index:03d}"
-        )
-
+    for triple in triples:
         triple_text = (
             f"[{triple['subject']}] "
             f"-> "
@@ -399,23 +691,17 @@ def format_triples_for_prompt(
             f"[{triple['object']}]"
         )
 
-        citation_map[
-            citation_id
-        ] = triple_text
-
         lines.append(
-            f"[{citation_id}] "
-            f"{triple_text}"
+            triple_text
         )
 
-    return (
-        "\n".join(lines),
-        citation_map,
+    return "\n".join(
+        lines
     )
 
 
 # --------------------------------------------------
-# 7. LLM Response Generation
+# 9. LLM Response Generation
 # --------------------------------------------------
 
 SYSTEM_PROMPT = """
@@ -432,11 +718,18 @@ Rules:
 3. If the retrieved triples are insufficient, say that
    the retrieved knowledge graph does not contain enough
    information.
-4. Cite every factual claim using the supporting triple ID,
-   for example [T001].
-5. You may cite multiple triples when necessary.
-6. Do not invent or modify citation IDs.
-7. Give a concise natural-language answer.
+4. Cite every factual claim using the exact supporting
+   knowledge graph triple.
+5. Copy cited triples exactly as they appear in the
+   retrieved triples. Do not paraphrase or modify them.
+6. Use this exact citation format:
+   [Subject] -> [Predicate] -> [Object]
+7. Place citations directly after the factual claim they
+   support.
+8. You may cite multiple triples when necessary.
+9. Never create a triple that is not present in the
+   retrieved triples.
+10. Give a concise natural-language answer.
 """
 
 
@@ -446,8 +739,7 @@ def generate_answer(
     temperature=TEMPERATURE,
     top_p=TOP_P,
 ):
-
-    context, citation_map = (
+    context = (
         format_triples_for_prompt(
             retrieved_triples
         )
@@ -463,10 +755,15 @@ Retrieved Knowledge Graph Triples:
 {context}
 
 Answer the question using only these triples.
+
+For every factual claim, cite the supporting triple
+exactly as it appears above.
 """
 
     response = (
-        client.chat.completions.create(
+        client
+        .chat.completions
+        .create(
             model=GENERATION_MODEL,
             messages=[
                 {
@@ -483,63 +780,42 @@ Answer the question using only these triples.
         )
     )
 
-    answer = (
+    return (
         response
         .choices[0]
         .message
         .content
     )
 
-    return answer, citation_map
-
 
 # --------------------------------------------------
-# 8. Expand Citation IDs into Exact Triples
-# --------------------------------------------------
-
-def expand_citations(
-    answer,
-    citation_map,
-):
-
-    for (
-        citation_id,
-        triple_text,
-    ) in citation_map.items():
-
-        answer = answer.replace(
-            f"[{citation_id}]",
-            triple_text,
-        )
-
-    return answer
-
-
-# --------------------------------------------------
-# 9. Complete Graph RAG Pipeline
+# 10. Initialize Graph RAG
 # --------------------------------------------------
 
 def initialize_graph_rag():
+    print(
+        "\nInitializing Graph RAG..."
+    )
 
-    print("\nInitializing Graph RAG...")
-
-    # Load triples
     triples = load_triples()
 
     print(
-        f"Loaded {len(triples)} triples."
+        f"Loaded "
+        f"{len(triples)} triples."
     )
 
-    # Build NetworkX graph
-    graph = build_graph(triples)
+    graph = build_graph(
+        triples
+    )
 
     print(
         f"Built graph with "
-        f"{graph.number_of_nodes()} nodes "
-        f"and {graph.number_of_edges()} edges."
+        f"{graph.number_of_nodes()} "
+        f"nodes and "
+        f"{graph.number_of_edges()} "
+        f"edges."
     )
 
-    # Load or create entity embeddings
     entity_index = (
         load_or_create_entity_index(
             graph
@@ -548,13 +824,23 @@ def initialize_graph_rag():
 
     print(
         f"Entity index ready with "
-        f"{len(entity_index['entities'])} entities."
+        f"{len(entity_index['entities'])} "
+        f"entities."
     )
 
-    print("Graph RAG ready.\n")
+    print(
+        "Graph RAG ready.\n"
+    )
 
-    return graph, entity_index
+    return (
+        graph,
+        entity_index,
+    )
 
+
+# --------------------------------------------------
+# 11. Complete Graph RAG Pipeline
+# --------------------------------------------------
 
 def graph_rag(
     query,
@@ -566,9 +852,9 @@ def graph_rag(
     max_hops=MAX_HOPS,
     max_triples=MAX_TRIPLES,
 ):
-
     (
         seed_entities,
+        candidate_triples,
         retrieved_triples,
     ) = retrieve_triples(
         query=query,
@@ -579,43 +865,52 @@ def graph_rag(
         max_triples=max_triples,
     )
 
-    (
-        raw_answer,
-        citation_map,
-    ) = generate_answer(
+    answer = generate_answer(
         query=query,
-        retrieved_triples=retrieved_triples,
+        retrieved_triples=(
+            retrieved_triples
+        ),
         temperature=temperature,
         top_p=top_p,
-    )
-
-    final_answer = expand_citations(
-        raw_answer,
-        citation_map,
     )
 
     return {
         "query": query,
         "seed_entities": seed_entities,
-        "retrieved_triples": retrieved_triples,
-        "answer": final_answer,
+        "candidate_count": len(
+            candidate_triples
+        ),
+        "retrieved_triples": (
+            retrieved_triples
+        ),
+        "answer": answer,
     }
 
 
 # --------------------------------------------------
-# 10. Command-Line Chat
+# 12. Command-Line Chat
 # --------------------------------------------------
 
 def run_cli(
     graph,
     entity_index,
 ):
+    print(
+        "Graph RAG"
+    )
 
-    print("Graph RAG")
-    print("Type 'exit' to quit.\n")
+    print(
+        "Hybrid retrieval: "
+        "lexical + semantic seeds, "
+        "graph expansion, "
+        "triple reranking"
+    )
+
+    print(
+        "Type 'exit' to quit.\n"
+    )
 
     while True:
-
         query = input(
             "Question: "
         ).strip()
@@ -632,26 +927,61 @@ def run_cli(
             entity_index=entity_index,
         )
 
-        print("\nSeed entities:")
+        print(
+            "\nSeed entities:"
+        )
 
-        for item in result["seed_entities"]:
+        for item in result[
+            "seed_entities"
+        ]:
             print(
-                f"- {item['entity']} "
-                f"({item['score']:.3f})"
+                f"- "
+                f"{item['entity']} "
+                f"("
+                f"{item['score']:.3f}, "
+                f"{item['method']}"
+                f")"
             )
 
-        print("\nRetrieved triples:")
+        print(
+            "\nGraph candidates:"
+        )
+
+        print(
+            f"- "
+            f"{result['candidate_count']} "
+            f"candidate triples "
+            f"before reranking"
+        )
+
+        print(
+            "\nRetrieved triples "
+            "after reranking:"
+        )
 
         for triple in result[
             "retrieved_triples"
         ]:
             print(
-                f"- [{triple['subject']}] "
-                f"-> [{triple['predicate']}] "
-                f"-> [{triple['object']}]"
+                f"- "
+                f"[{triple['subject']}] "
+                f"-> "
+                f"[{triple['predicate']}] "
+                f"-> "
+                f"[{triple['object']}] "
+                f"(score="
+                f"{triple['final_score']:.3f}, "
+                f"semantic="
+                f"{triple['semantic_score']:.3f}, "
+                f"hop="
+                f"{triple['hop']}"
+                f")"
             )
 
-        print("\nAnswer:")
+        print(
+            "\nAnswer:"
+        )
+
         print(
             result["answer"]
         )
@@ -664,7 +994,6 @@ def run_cli(
 
 
 if __name__ == "__main__":
-
     graph, entity_index = (
         initialize_graph_rag()
     )

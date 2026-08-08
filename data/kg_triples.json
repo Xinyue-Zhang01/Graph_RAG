@@ -1,0 +1,1332 @@
+[
+  {
+    "subject": "Adam optimizer",
+    "predicate": "varies",
+    "object": "learning rate"
+  },
+  {
+    "subject": "Aidan N. Gomez",
+    "predicate": "affiliated with",
+    "object": "University of Toronto"
+  },
+  {
+    "subject": "Alex Krizhevsky",
+    "predicate": "is author of",
+    "object": "Dropout: a simple way to prevent neural networks from overfitting"
+  },
+  {
+    "subject": "Alexandra Birch",
+    "predicate": "is author of",
+    "object": "Neural machine translation of rare words with subword units"
+  },
+  {
+    "subject": "American governments",
+    "predicate": "have passed",
+    "object": "laws"
+  },
+  {
+    "subject": "Andy Davis",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Ankur Parikh",
+    "predicate": "is author of",
+    "object": "A decomposable attention model"
+  },
+  {
+    "subject": "Arthur Szlam",
+    "predicate": "is author of",
+    "object": "End-to-end memory networks"
+  },
+  {
+    "subject": "Ashish Vaswani",
+    "predicate": "affiliated with",
+    "object": "Google Brain"
+  },
+  {
+    "subject": "Attention(Q, K, V)",
+    "predicate": "uses",
+    "object": "matrices K and V"
+  },
+  {
+    "subject": "Attention(Q, K, V)",
+    "predicate": "uses",
+    "object": "softmax"
+  },
+  {
+    "subject": "Azalia Mirhoseini",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Barry Haddow",
+    "predicate": "is author of",
+    "object": "Neural machine translation of rare words with subword units"
+  },
+  {
+    "subject": "ByteNet",
+    "predicate": "uses",
+    "object": "convolutional neural networks"
+  },
+  {
+    "subject": "Caiming Xiong",
+    "predicate": "is author of",
+    "object": "A deep reinforced model for abstractive summarization"
+  },
+  {
+    "subject": "Christian Szegedy",
+    "predicate": "is author of",
+    "object": "Rethinking the inception architecture for computer vision"
+  },
+  {
+    "subject": "ConvS2S",
+    "predicate": "uses",
+    "object": "convolutional neural networks"
+  },
+  {
+    "subject": "Dan Klein",
+    "predicate": "is author of",
+    "object": "Learning accurate, compact, and interpretable tree annotation"
+  },
+  {
+    "subject": "Dipanjan Das",
+    "predicate": "is author of",
+    "object": "A decomposable attention model"
+  },
+  {
+    "subject": "Embeddings",
+    "predicate": "are used in",
+    "object": "sequence transduction models"
+  },
+  {
+    "subject": "Embeddings",
+    "predicate": "convert",
+    "object": "input tokens"
+  },
+  {
+    "subject": "Embeddings",
+    "predicate": "convert",
+    "object": "output tokens"
+  },
+  {
+    "subject": "Embeddings",
+    "predicate": "produce",
+    "object": "vectors"
+  },
+  {
+    "subject": "Extended Neural GPU",
+    "predicate": "uses",
+    "object": "convolutional neural networks"
+  },
+  {
+    "subject": "Gated recurrent neural networks",
+    "predicate": "used in",
+    "object": "sequence modeling"
+  },
+  {
+    "subject": "Geoffrey E Hinton",
+    "predicate": "is author of",
+    "object": "Dropout: a simple way to prevent neural networks from overfitting"
+  },
+  {
+    "subject": "Geoffrey Hinton",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Google",
+    "predicate": "grants permission to reproduce",
+    "object": "tables and figures"
+  },
+  {
+    "subject": "Illia Polosukhin",
+    "predicate": "affiliated with",
+    "object": "Google Research"
+  },
+  {
+    "subject": "Ilya Sutskever",
+    "predicate": "is author of",
+    "object": "Dropout: a simple way to prevent neural networks from overfitting"
+  },
+  {
+    "subject": "Ilya Sutskever",
+    "predicate": "is author of",
+    "object": "Sequence to sequence learning with neural networks"
+  },
+  {
+    "subject": "Jakob Uszkoreit",
+    "predicate": "affiliated with",
+    "object": "Google Research"
+  },
+  {
+    "subject": "Jakob Uszkoreit",
+    "predicate": "is author of",
+    "object": "A decomposable attention model"
+  },
+  {
+    "subject": "Jason Weston",
+    "predicate": "is author of",
+    "object": "End-to-end memory networks"
+  },
+  {
+    "subject": "Jeff Dean",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Jie Zhou",
+    "predicate": "is author of",
+    "object": "Deep recurrent models with fast-forward connections for neural machine translation"
+  },
+  {
+    "subject": "Jingbo Zhu",
+    "predicate": "is author of",
+    "object": "Fast and accurate shift-reduce constituent parsing"
+  },
+  {
+    "subject": "Jonathon Shlens",
+    "predicate": "is author of",
+    "object": "Rethinking the inception architecture for computer vision"
+  },
+  {
+    "subject": "Klaus Macherey",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Krzysztof Maziarz",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Law",
+    "predicate": "should be",
+    "object": "application"
+  },
+  {
+    "subject": "Leon Barrett",
+    "predicate": "is author of",
+    "object": "Learning accurate, compact, and interpretable tree annotation"
+  },
+  {
+    "subject": "Lior Wolf",
+    "predicate": "is author of",
+    "object": "Using the output embedding to improve language models"
+  },
+  {
+    "subject": "Llion Jones",
+    "predicate": "affiliated with",
+    "object": "Google Research"
+  },
+  {
+    "subject": "Long short-term memory",
+    "predicate": "used in",
+    "object": "sequence modeling"
+  },
+  {
+    "subject": "Machine Translation",
+    "predicate": "includes",
+    "object": "WMT 2014 English-to-French translation task"
+  },
+  {
+    "subject": "Machine Translation",
+    "predicate": "includes",
+    "object": "WMT 2014 English-to-German translation task"
+  },
+  {
+    "subject": "Maxim Krikun",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Mike Schuster",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Min Zhang",
+    "predicate": "is author of",
+    "object": "Fast and accurate shift-reduce constituent parsing"
+  },
+  {
+    "subject": "Mohammad Norouzi",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Muhua Zhu",
+    "predicate": "is author of",
+    "object": "Fast and accurate shift-reduce constituent parsing"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "attends to",
+    "object": "representation subspaces"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "projects",
+    "object": "keys"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "projects",
+    "object": "queries"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "projects",
+    "object": "values"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "uses",
+    "object": "attention heads"
+  },
+  {
+    "subject": "Multi-Head Attention",
+    "predicate": "yields",
+    "object": "output values"
+  },
+  {
+    "subject": "Nal Kalchbrenner",
+    "predicate": "provided",
+    "object": "fruitful comments, corrections and inspiration"
+  },
+  {
+    "subject": "Neural Information Processing Systems (NIPS 2017)",
+    "predicate": "conference for",
+    "object": "Transformer paper"
+  },
+  {
+    "subject": "Niki Parmar",
+    "predicate": "affiliated with",
+    "object": "Google Research"
+  },
+  {
+    "subject": "Nitish Srivastava",
+    "predicate": "is author of",
+    "object": "Dropout: a simple way to prevent neural networks from overfitting"
+  },
+  {
+    "subject": "Noam Shazeer",
+    "predicate": "affiliated with",
+    "object": "Google Brain"
+  },
+  {
+    "subject": "Noam Shazeer",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Ofir Press",
+    "predicate": "is author of",
+    "object": "Using the output embedding to improve language models"
+  },
+  {
+    "subject": "Oriol Vinyals",
+    "predicate": "is author of",
+    "object": "Sequence to sequence learning with neural networks"
+  },
+  {
+    "subject": "Oscar Täckström",
+    "predicate": "is author of",
+    "object": "A decomposable attention model"
+  },
+  {
+    "subject": "Peng Li",
+    "predicate": "is author of",
+    "object": "Deep recurrent models with fast-forward connections for neural machine translation"
+  },
+  {
+    "subject": "Position-wise Feed-Forward Networks",
+    "predicate": "contains",
+    "object": "ReLU activation"
+  },
+  {
+    "subject": "Position-wise Feed-Forward Networks",
+    "predicate": "contains",
+    "object": "linear transformations"
+  },
+  {
+    "subject": "Qin Gao",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Quoc Le",
+    "predicate": "is author of",
+    "object": "Outrageously large neural networks: The sparsely-gated mixture-of-experts layer"
+  },
+  {
+    "subject": "Quoc V Le",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Quoc VV Le",
+    "predicate": "is author of",
+    "object": "Sequence to sequence learning with neural networks"
+  },
+  {
+    "subject": "Recurrent neural networks",
+    "predicate": "used in",
+    "object": "sequence modeling"
+  },
+  {
+    "subject": "Residual Dropout",
+    "predicate": "applies to",
+    "object": "decoder stacks"
+  },
+  {
+    "subject": "Residual Dropout",
+    "predicate": "applies to",
+    "object": "embeddings"
+  },
+  {
+    "subject": "Residual Dropout",
+    "predicate": "applies to",
+    "object": "encoder"
+  },
+  {
+    "subject": "Residual Dropout",
+    "predicate": "applies to",
+    "object": "positional encodings"
+  },
+  {
+    "subject": "Residual Dropout",
+    "predicate": "applies to",
+    "object": "sub-layer"
+  },
+  {
+    "subject": "Richard Socher",
+    "predicate": "is author of",
+    "object": "A deep reinforced model for abstractive summarization"
+  },
+  {
+    "subject": "Rico Sennrich",
+    "predicate": "is author of",
+    "object": "Neural machine translation of rare words with subword units"
+  },
+  {
+    "subject": "Rob Fergus",
+    "predicate": "is author of",
+    "object": "End-to-end memory networks"
+  },
+  {
+    "subject": "Romain Paulus",
+    "predicate": "is author of",
+    "object": "A deep reinforced model for abstractive summarization"
+  },
+  {
+    "subject": "Romain Thibaux",
+    "predicate": "is author of",
+    "object": "Learning accurate, compact, and interpretable tree annotation"
+  },
+  {
+    "subject": "Ruslan Salakhutdinov",
+    "predicate": "is author of",
+    "object": "Dropout: a simple way to prevent neural networks from overfitting"
+  },
+  {
+    "subject": "Sainbayar Sukhbaatar",
+    "predicate": "is author of",
+    "object": "End-to-end memory networks"
+  },
+  {
+    "subject": "Sergey Ioffe",
+    "predicate": "is author of",
+    "object": "Rethinking the inception architecture for computer vision"
+  },
+  {
+    "subject": "Slav Petrov",
+    "predicate": "is author of",
+    "object": "Learning accurate, compact, and interpretable tree annotation"
+  },
+  {
+    "subject": "Softmax",
+    "predicate": "converts",
+    "object": "decoder output"
+  },
+  {
+    "subject": "Stephan Gouws",
+    "predicate": "provided",
+    "object": "fruitful comments, corrections and inspiration"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "achieves",
+    "object": "BLEU scores"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "achieves BLEU score on",
+    "object": "WMT 2014 English-to-French translation task"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "achieves BLEU score on",
+    "object": "WMT 2014 English-to-German translation task"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "affected by",
+    "object": "attention key size"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "applied to",
+    "object": "English constituency parsing"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "benefits from",
+    "object": "dropout"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Berkeley-Parser"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Dyer et al."
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Huang & Harper"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Luong et al."
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "McClosky et al."
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Petrov et al."
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Recurrent Neural Network Grammar"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Vinyals & Kaiser"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "Zhu et al."
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "learned positional embeddings"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "compared with",
+    "object": "sinusoidal positional encoding"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "designed and implemented by",
+    "object": "Ashish Vaswani"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "designed and implemented by",
+    "object": "Illia Polosukhin"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "evaluated on",
+    "object": "English-to-German translation"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "evaluated on",
+    "object": "newstest2013"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "generalizes to",
+    "object": "English constituency parsing"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "is a",
+    "object": "sequence transduction model"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "is planned to be extended to",
+    "object": "audio"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "is planned to be extended to",
+    "object": "images"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "is planned to be extended to",
+    "object": "problems involving input and output modalities other than text"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "is planned to be extended to",
+    "object": "video"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "outperforms",
+    "object": "BerkleyParser"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "part of",
+    "object": "encoder-decoder architectures"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "proposed by",
+    "object": "Jakob Uszkoreit"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "relies on",
+    "object": "self-attention"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "replaces",
+    "object": "convolutional layers"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "replaces",
+    "object": "recurrent layers"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "tested on",
+    "object": "newstest2014 tests"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "trained on",
+    "object": "P100 GPUs"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "trained on",
+    "object": "Penn Treebank"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "trained on",
+    "object": "Wall Street Journal (WSJ)"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "uses",
+    "object": "beam search"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "uses",
+    "object": "multi-headed self-attention"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "uses",
+    "object": "point-wise fully connected layers"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "uses",
+    "object": "self-attention"
+  },
+  {
+    "subject": "Transformer",
+    "predicate": "varied by",
+    "object": "attention heads"
+  },
+  {
+    "subject": "Transformer (base model)",
+    "predicate": "achieves",
+    "object": "BLEU scores"
+  },
+  {
+    "subject": "Transformer (big)",
+    "predicate": "achieves",
+    "object": "BLEU scores"
+  },
+  {
+    "subject": "Transformer (big)",
+    "predicate": "uses",
+    "object": "dropout rate"
+  },
+  {
+    "subject": "Vincent Vanhoucke",
+    "predicate": "is author of",
+    "object": "Rethinking the inception architecture for computer vision"
+  },
+  {
+    "subject": "WMT 2014 English-French dataset",
+    "predicate": "consists of",
+    "object": "sentence pairs"
+  },
+  {
+    "subject": "WMT 2014 English-German dataset",
+    "predicate": "consists of",
+    "object": "sentence pairs"
+  },
+  {
+    "subject": "WMT 2014 English-to-French",
+    "predicate": "is a task in",
+    "object": "translation"
+  },
+  {
+    "subject": "WMT 2014 English-to-French translation task",
+    "predicate": "achieves",
+    "object": "state-of-the-art BLEU score"
+  },
+  {
+    "subject": "WMT 2014 English-to-German",
+    "predicate": "is a task in",
+    "object": "translation"
+  },
+  {
+    "subject": "WMT 2014 English-to-German translation task",
+    "predicate": "achieves",
+    "object": "state-of-the-art BLEU score"
+  },
+  {
+    "subject": "Wei Xu",
+    "predicate": "is author of",
+    "object": "Deep recurrent models with fast-forward connections for neural machine translation"
+  },
+  {
+    "subject": "Wenliang Chen",
+    "predicate": "is author of",
+    "object": "Fast and accurate shift-reduce constituent parsing"
+  },
+  {
+    "subject": "Wolfgang Macherey",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Xuguang Wang",
+    "predicate": "is author of",
+    "object": "Deep recurrent models with fast-forward connections for neural machine translation"
+  },
+  {
+    "subject": "Ying Cao",
+    "predicate": "is author of",
+    "object": "Deep recurrent models with fast-forward connections for neural machine translation"
+  },
+  {
+    "subject": "Yonghui Wu",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Yuan Cao",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "Yue Zhang",
+    "predicate": "is author of",
+    "object": "Fast and accurate shift-reduce constituent parsing"
+  },
+  {
+    "subject": "Zbigniew Wojna",
+    "predicate": "is author of",
+    "object": "Rethinking the inception architecture for computer vision"
+  },
+  {
+    "subject": "Zhifeng Chen",
+    "predicate": "is author of",
+    "object": "Google’s neural machine translation system: Bridging the gap between human and machine translation"
+  },
+  {
+    "subject": "additive attention",
+    "predicate": "computes",
+    "object": "compatibility function"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "computes",
+    "object": "weighted sum"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "follows",
+    "object": "long-distance dependencies"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "maps",
+    "object": "key-value pairs"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "maps",
+    "object": "query"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "maps",
+    "object": "vectors"
+  },
+  {
+    "subject": "attention function",
+    "predicate": "uses",
+    "object": "compatibility function"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "are from",
+    "object": "self-attention"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "attend to",
+    "object": "verb ‘making’"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "complete",
+    "object": "phrase ‘making...more difficult’"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "exhibit behavior related to",
+    "object": "semantic structure"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "exhibit behavior related to",
+    "object": "syntactic structure"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "exhibit behaviour related to",
+    "object": "structure of the sentence"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "learn to perform",
+    "object": "different tasks"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "resolve",
+    "object": "anaphora"
+  },
+  {
+    "subject": "attention heads",
+    "predicate": "uses",
+    "object": "parameter matrices"
+  },
+  {
+    "subject": "attention-based models",
+    "predicate": "are planned to be applied to",
+    "object": "other tasks"
+  },
+  {
+    "subject": "base models",
+    "predicate": "obtained by averaging",
+    "object": "checkpoints"
+  },
+  {
+    "subject": "base models",
+    "predicate": "trained for",
+    "object": "training step"
+  },
+  {
+    "subject": "base models",
+    "predicate": "use",
+    "object": "hyperparameters"
+  },
+  {
+    "subject": "beam search",
+    "predicate": "uses",
+    "object": "beam size"
+  },
+  {
+    "subject": "beam search",
+    "predicate": "uses",
+    "object": "length penalty"
+  },
+  {
+    "subject": "big models",
+    "predicate": "obtained by averaging",
+    "object": "checkpoints"
+  },
+  {
+    "subject": "big models",
+    "predicate": "trained for",
+    "object": "training step"
+  },
+  {
+    "subject": "byte-pair",
+    "predicate": "has",
+    "object": "source-target vocabulary"
+  },
+  {
+    "subject": "compatibility function",
+    "predicate": "uses",
+    "object": "feed-forward network"
+  },
+  {
+    "subject": "convolutional",
+    "predicate": "has",
+    "object": "maximum path lengths"
+  },
+  {
+    "subject": "convolutional",
+    "predicate": "has",
+    "object": "per-layer complexity"
+  },
+  {
+    "subject": "convolutional",
+    "predicate": "has",
+    "object": "sequential operations"
+  },
+  {
+    "subject": "convolutional layer",
+    "predicate": "has",
+    "object": "kernel width"
+  },
+  {
+    "subject": "convolutional layer",
+    "predicate": "uses",
+    "object": "dilated convolutions"
+  },
+  {
+    "subject": "convolutional layer",
+    "predicate": "uses",
+    "object": "separable convolutions"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "employ",
+    "object": "layer normalization"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "employ",
+    "object": "residual connection"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "part of",
+    "object": "encoder-decoder structure"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "preserves",
+    "object": "auto-regressive property"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "uses",
+    "object": "multi-head attention"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "uses",
+    "object": "multi-headed self-attention"
+  },
+  {
+    "subject": "decoder",
+    "predicate": "uses",
+    "object": "position-wise fully connected feed-forward network"
+  },
+  {
+    "subject": "decoder output",
+    "predicate": "produces",
+    "object": "predicted next-token probabilities"
+  },
+  {
+    "subject": "dff",
+    "predicate": "is",
+    "object": "2048"
+  },
+  {
+    "subject": "dmodel",
+    "predicate": "is",
+    "object": "512"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "applies",
+    "object": "softmax function"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "computes on",
+    "object": "matrix Q"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "is identical to",
+    "object": "Attention(Q, K, V)"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "uses",
+    "object": "keys"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "uses",
+    "object": "queries"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "uses",
+    "object": "scaling factor"
+  },
+  {
+    "subject": "dot-product attention",
+    "predicate": "uses",
+    "object": "values"
+  },
+  {
+    "subject": "embedding layers",
+    "predicate": "use",
+    "object": "weight matrix"
+  },
+  {
+    "subject": "encoder",
+    "predicate": "employ",
+    "object": "layer normalization"
+  },
+  {
+    "subject": "encoder",
+    "predicate": "employ",
+    "object": "residual connection"
+  },
+  {
+    "subject": "encoder",
+    "predicate": "part of",
+    "object": "encoder-decoder structure"
+  },
+  {
+    "subject": "encoder",
+    "predicate": "uses",
+    "object": "multi-headed self-attention"
+  },
+  {
+    "subject": "encoder",
+    "predicate": "uses",
+    "object": "position-wise fully connected feed-forward network"
+  },
+  {
+    "subject": "encoder-decoder attention",
+    "predicate": "uses",
+    "object": "keys"
+  },
+  {
+    "subject": "encoder-decoder attention",
+    "predicate": "uses",
+    "object": "queries"
+  },
+  {
+    "subject": "encoder-decoder attention",
+    "predicate": "uses",
+    "object": "values"
+  },
+  {
+    "subject": "floating point operations",
+    "predicate": "calculated by",
+    "object": "GPUs"
+  },
+  {
+    "subject": "floating point operations",
+    "predicate": "calculated by",
+    "object": "sustained single-precision floating-point capacity"
+  },
+  {
+    "subject": "floating point operations",
+    "predicate": "calculated by",
+    "object": "training time"
+  },
+  {
+    "subject": "https://github.com/tensorflow/tensor2tensor",
+    "predicate": "is the location of",
+    "object": "code used to train and evaluate models"
+  },
+  {
+    "subject": "inference",
+    "predicate": "uses",
+    "object": "maximum output length"
+  },
+  {
+    "subject": "label smoothing",
+    "predicate": "improves",
+    "object": "BLEU scores"
+  },
+  {
+    "subject": "label smoothing",
+    "predicate": "improves",
+    "object": "accuracy"
+  },
+  {
+    "subject": "laws",
+    "predicate": "make",
+    "object": "registration"
+  },
+  {
+    "subject": "laws",
+    "predicate": "make",
+    "object": "voting process"
+  },
+  {
+    "subject": "learning rate",
+    "predicate": "increased for",
+    "object": "warmup_steps"
+  },
+  {
+    "subject": "linear transformations",
+    "predicate": "are similar to",
+    "object": "convolutions"
+  },
+  {
+    "subject": "models",
+    "predicate": "compared in",
+    "object": "training costs"
+  },
+  {
+    "subject": "models",
+    "predicate": "compared in",
+    "object": "translation quality"
+  },
+  {
+    "subject": "models",
+    "predicate": "compared to",
+    "object": "model architectures"
+  },
+  {
+    "subject": "models",
+    "predicate": "employ",
+    "object": "regularization"
+  },
+  {
+    "subject": "models",
+    "predicate": "tested on",
+    "object": "development set"
+  },
+  {
+    "subject": "models",
+    "predicate": "trained on",
+    "object": "NVIDIA P100 GPUs"
+  },
+  {
+    "subject": "models",
+    "predicate": "use",
+    "object": "Adam optimizer"
+  },
+  {
+    "subject": "models",
+    "predicate": "use",
+    "object": "beam search"
+  },
+  {
+    "subject": "network",
+    "predicate": "learns",
+    "object": "long-range dependencies"
+  },
+  {
+    "subject": "positional encoding",
+    "predicate": "is added to",
+    "object": "input embeddings"
+  },
+  {
+    "subject": "positional encoding",
+    "predicate": "is used in",
+    "object": "decoder stack"
+  },
+  {
+    "subject": "positional encoding",
+    "predicate": "is used in",
+    "object": "encoder stack"
+  },
+  {
+    "subject": "positional encoding",
+    "predicate": "uses",
+    "object": "sine and cosine functions"
+  },
+  {
+    "subject": "recurrent",
+    "predicate": "has",
+    "object": "maximum path lengths"
+  },
+  {
+    "subject": "recurrent",
+    "predicate": "has",
+    "object": "per-layer complexity"
+  },
+  {
+    "subject": "recurrent",
+    "predicate": "has",
+    "object": "sequential operations"
+  },
+  {
+    "subject": "restricted self-attention",
+    "predicate": "has",
+    "object": "maximum path lengths"
+  },
+  {
+    "subject": "restricted self-attention",
+    "predicate": "has",
+    "object": "per-layer complexity"
+  },
+  {
+    "subject": "restricted self-attention",
+    "predicate": "has",
+    "object": "sequential operations"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "allows",
+    "object": "parallelization"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "are in",
+    "object": "decoder"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "are in",
+    "object": "encoder"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "has",
+    "object": "computational complexity"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "has",
+    "object": "maximum path lengths"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "has",
+    "object": "per-layer complexity"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "has",
+    "object": "sequential operations"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "helps learn",
+    "object": "long-range dependencies"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "is at",
+    "object": "layer 5 of 6"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "is combined with",
+    "object": "point-wise feed-forward layer"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "is used for",
+    "object": "sequence transduction"
+  },
+  {
+    "subject": "self-attention",
+    "predicate": "yields",
+    "object": "interpretable models"
+  },
+  {
+    "subject": "sentence pairs",
+    "predicate": "encoded using",
+    "object": "byte-pair"
+  },
+  {
+    "subject": "sentence pairs",
+    "predicate": "split into",
+    "object": "word-piece vocabulary"
+  },
+  {
+    "subject": "sentence representations",
+    "predicate": "include",
+    "object": "byte-pair"
+  },
+  {
+    "subject": "sentence representations",
+    "predicate": "include",
+    "object": "word-piece"
+  },
+  {
+    "subject": "sine and cosine functions",
+    "predicate": "form",
+    "object": "geometric progression"
+  },
+  {
+    "subject": "tensor2tensor",
+    "predicate": "implemented by",
+    "object": "Aidan N. Gomez"
+  },
+  {
+    "subject": "tensor2tensor",
+    "predicate": "implemented by",
+    "object": "Llukasz Kaiser"
+  },
+  {
+    "subject": "training batch",
+    "predicate": "contains",
+    "object": "source tokens"
+  },
+  {
+    "subject": "training batch",
+    "predicate": "contains",
+    "object": "target tokens"
+  },
+  {
+    "subject": "training costs",
+    "predicate": "estimated by",
+    "object": "floating point operations"
+  },
+  {
+    "subject": "training regime",
+    "predicate": "describes",
+    "object": "models"
+  },
+  {
+    "subject": "word ‘its’",
+    "predicate": "has sharp",
+    "object": "attentions"
+  },
+  {
+    "subject": "Łukasz Kaiser",
+    "predicate": "affiliated with",
+    "object": "Google Brain"
+  }
+]
