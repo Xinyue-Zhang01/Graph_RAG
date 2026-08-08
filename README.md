@@ -15,9 +15,7 @@ The two pipelines use the same source document and generation model so that thei
 Graph-Based-Retrieval-Augmented-Generation/
 │
 ├── data/
-│   ├── attention_is_all_you_need.pdf
-│   ├── attention_is_all_you_need.txt
-│   └── kg_triples.json
+│   └── attention_is_all_you_need.pdf
 │
 ├── build_kg.py
 ├── graph_rag.py
@@ -32,11 +30,13 @@ Graph-Based-Retrieval-Augmented-Generation/
 Additional files are generated locally when the pipelines are run:
 
 ```text
-data/entity_index.json   # Entity embeddings for Graph RAG
-chroma_db/               # Local ChromaDB database for Vector RAG
+data/attention_is_all_you_need.txt   # Source text extracted from PDF
+data/kg_triples.json                 # Knowledge Graph with semantic triples
+data/entity_index.json               # Entity embeddings for Graph RAG
+chroma_db/                           # Local ChromaDB database for Vector RAG
 ```
 
-These generated indexes are excluded from Git through `.gitignore`.
+These generated files are excluded from Git through `.gitignore`.
 
 ---
 
