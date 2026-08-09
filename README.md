@@ -1,15 +1,15 @@
 # Graph-Based Retrieval-Augmented Generation
 
-This project implements and compares two Retrieval-Augmented Generation (RAG) pipelines using **“Attention Is All You Need”** by Vaswani et al. (2017) as the sole knowledge source:
+This repository implements and evaluates two Retrieval-Augmented Generation (RAG) pipelines using **“Attention Is All You Need”** by Vaswani et al. (2017) as the sole knowledge source:
 
-- **Graph RAG**: retrieves structured knowledge graph triples generated with KGGen.
-- **Vector RAG**: retrieves semantically similar text chunks from a local ChromaDB vector database.
+- **Graph RAG** — retrieves structured `(Subject, Predicate, Object)` triples from a knowledge graph generated with KGGen.
+- **Vector RAG** — retrieves semantically similar text chunks from a local ChromaDB vector database.
 
-Both systems use the same source paper, embedding model, and generation model where applicable, allowing their retrieval behavior to be compared under similar conditions.
+The project compares the two retrieval paradigms under a shared source document and generation model, and includes both a five-query validation experiment and a parameter analysis of `temperature` and `top_p`.
 
 ---
 
-## 1. Project Structure
+## 1. Repository Structure
 
 ```text
 Graph_RAG/
@@ -18,6 +18,11 @@ Graph_RAG/
 │   ├── attention_is_all_you_need.pdf
 │   ├── attention_is_all_you_need.txt
 │   └── kg_triples.json
+│
+├── results/
+│   ├── Experimental_Validation_A
+│   ├── Experimental_Validation_B
+│   └── report.pdf
 │
 ├── build_kg.py
 ├── graph_rag.py
@@ -29,41 +34,107 @@ Graph_RAG/
 └── README.md
 ```
 
-Additional files and directories are generated locally when the pipelines are run:
+Two additional indexes are generated locally when the systems are run:
 
 ```text
-data/entity_index.json   # Persistent entity embeddings used by Graph RAG
-chroma_db/               # Local persistent ChromaDB database used by Vector RAG
+data/entity_index.json   # Graph entity embeddings
+chroma_db/               # Persistent ChromaDB vector index
 ```
 
-These local indexes are excluded from Git through `.gitignore` and can be regenerated from the source data.
+These local indexes are excluded from Git and can be regenerated from the repository contents.
 
 ---
 
-## 2. Requirements
+## 2. Source Document
 
-The project requires:
+Both systems use the same source:
+
+**Vaswani, A. et al. (2017). “Attention Is All You Need.”**
+
+Original PDF: https://arxiv.org/pdf/1706.03762.pdf
+
+The local source file is:
+
+```text
+data/attention_is_all_you_need.pdf
+```
+
+No external document is used as retrieval evidence during the experiments.
+
+---
+
+## 3. System Overview
+
+### Graph RAG
+
+```text
+Paper PDF
+   ↓
+Text extraction
+   ↓
+KGGen
+   ↓
+(Subject, Predicate, Object) triples
+   ↓
+Hybrid entity linking
+   ↓
+Graph expansion
+   ↓
+Query-aware triple reranking
+   ↓
+Top triples
+   ↓
+LLM answer with exact triple citations
+```
+
+### Vector RAG
+
+```text
+Paper PDF
+   ↓
+Page loading
+   ↓
+Overlapping text chunks
+   ↓
+Embeddings
+   ↓
+ChromaDB
+   ↓
+Vector similarity search
+   ↓
+Top text chunks
+   ↓
+LLM answer with source citations
+```
+
+The important methodological difference is that **Graph RAG retrieves structured graph evidence**, whereas **Vector RAG retrieves sections of the original text directly**.
+
+---
+
+## 4. Requirements
 
 - Python 3.10 or later
-- An OpenAI API key
+- OpenAI API key
 - Internet access for OpenAI API calls
 
-All Python dependencies are listed in `requirements.txt`.
+Install the dependencies from:
+
+```text
+requirements.txt
+```
 
 ---
 
-## 3. Clone the Repository
+## 5. Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/Xinyue-Zhang01/Graph_RAG.git
 cd Graph_RAG
 ```
 
----
-
-## 4. Create a Virtual Environment
-
-Using a Python virtual environment is recommended.
+Create a virtual environment.
 
 ### Windows
 
@@ -79,23 +150,18 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Upgrade pip:
+Install dependencies:
 
 ```bash
 python -m pip install --upgrade pip
-```
-
-Install the required packages:
-
-```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 5. Configure Environment Variables
+## 6. Environment Configuration
 
-The repository contains an `.env.template` file. Create a local `.env` file from this template.
+Create `.env` from the supplied template.
 
 ### Windows
 
@@ -109,26 +175,21 @@ copy .env.template .env
 cp .env.template .env
 ```
 
-Open `.env` and replace:
+Add a valid OpenAI API key:
 
 ```env
 OPENAI_API_KEY=your_api_key_here
 ```
 
-with a valid OpenAI API key.
-
-The default configuration is:
+The default experimental configuration is:
 
 ```env
-# OpenAI
-OPENAI_API_KEY=your_api_key_here
-
 # Models
 KG_MODEL=openai/gpt-4o
 GENERATION_MODEL=gpt-4o
 EMBEDDING_MODEL=text-embedding-3-small
 
-# Generation parameters
+# Generation
 TEMPERATURE=0.1
 TOP_P=0.3
 
@@ -140,7 +201,6 @@ KG_CLUSTER=true
 GRAPH_SEED_K=5
 GRAPH_MAX_HOPS=2
 GRAPH_MAX_TRIPLES=20
-
 GRAPH_TRIPLE_SIM_WEIGHT=0.7
 GRAPH_SEED_SCORE_WEIGHT=0.3
 GRAPH_HOP_PENALTY=0.05
@@ -153,25 +213,7 @@ VECTOR_CHUNK_OVERLAP=150
 VECTOR_TOP_K=5
 ```
 
-The local `.env` file is ignored by Git and should never be committed.
-
----
-
-## 6. Source Data
-
-The sole knowledge source used by both RAG systems is:
-
-**Vaswani, A. et al. (2017). “Attention Is All You Need.”**
-
-Original paper: https://arxiv.org/pdf/1706.03762.pdf
-
-The source PDF is stored at:
-
-```text
-data/attention_is_all_you_need.pdf
-```
-
-The same paper is used for both the Graph RAG and Vector RAG pipelines.
+The local `.env` file is ignored by Git and should not be committed.
 
 ---
 
@@ -185,51 +227,15 @@ Run:
 python build_kg.py
 ```
 
-The script performs the following pipeline:
+The script:
 
-```text
-PDF
- ↓
-Extract text with PyMuPDF
- ↓
-KGGen
- ↓
-Semantic triples
- ↓
-kg_triples.json
-```
+1. extracts text from the PDF with PyMuPDF;
+2. stores the extracted text in `data/attention_is_all_you_need.txt`;
+3. sends the source text to KGGen;
+4. converts KGGen relations into JSON triples;
+5. stores the graph data in `data/kg_triples.json`.
 
-### Step 1 — Text Extraction
-
-Text is extracted from:
-
-```text
-data/attention_is_all_you_need.pdf
-```
-
-and stored in:
-
-```text
-data/attention_is_all_you_need.txt
-```
-
-If the text file already exists, `build_kg.py` reuses it instead of extracting the PDF again.
-
-### Step 2 — Knowledge Graph Construction
-
-KGGen processes the extracted paper and produces relations represented exclusively as triples:
-
-```text
-(Subject, Predicate, Object)
-```
-
-The triples are stored as JSON in:
-
-```text
-data/kg_triples.json
-```
-
-Example:
+Triples use the format:
 
 ```json
 {
@@ -239,39 +245,25 @@ Example:
 }
 ```
 
-The main KG construction settings are:
+KG construction uses the source paper directly without a task-specific extraction context. This avoids explicitly tuning graph construction toward the later evaluation questions.
 
-```env
-KG_MODEL=openai/gpt-4o
-KG_CHUNK_SIZE=5000
-KG_CLUSTER=true
-```
+If the extracted `.txt` file already exists, `build_kg.py` reuses it instead of extracting the PDF again.
 
 ---
 
 ## 8. Run Graph RAG
 
-After `kg_triples.json` has been created, run:
-
 ```bash
 python graph_rag.py
 ```
 
-On startup, the program:
+On first use, the system creates entity embeddings and stores them locally in:
 
 ```text
-Loads kg_triples.json
- ↓
-Builds a NetworkX MultiDiGraph
- ↓
-Loads or creates entity embeddings
- ↓
-Creates data/entity_index.json if needed
- ↓
-Starts the command-line question-answering interface
+data/entity_index.json
 ```
 
-After initialization, the program displays:
+The command-line interface then accepts questions about the paper.
 
 ```text
 Graph RAG
@@ -281,61 +273,46 @@ Type 'exit' to quit.
 Question:
 ```
 
-Enter a question about the paper and press Enter.
-
-To stop the program:
+The generation model is restricted to the retrieved graph triples. Every factual claim must cite an exact supporting triple in the form:
 
 ```text
-exit
+[Subject] -> [Predicate] -> [Object]
 ```
+
+Example:
+
+```text
+[Transformer] -> [relies on] -> [self-attention]
+```
+
+If the retrieved graph evidence is insufficient, the model is instructed to say so instead of supplementing the answer with outside knowledge.
 
 ---
 
-## 9. Graph RAG Retrieval Method
+## 9. Graph Retrieval Method
 
-The current Graph RAG pipeline uses a hybrid, query-aware retrieval strategy:
-
-```text
-User question
-      ↓
-Hybrid entity linking
-      ├── lexical entity matching
-      └── semantic entity matching
-      ↓
-Seed entities
-      ↓
-Graph expansion over incoming and outgoing edges
-      ↓
-Candidate triples from up to 2 hops
-      ↓
-Query-aware semantic triple reranking
-      ↓
-Top retrieved triples
-      ↓
-LLM answer with exact triple citations
-```
+The current retriever uses three stages.
 
 ### 9.1 Hybrid Entity Linking
 
-The query is first linked to knowledge graph entities in two ways.
+A question is linked to graph entities through:
 
-**Lexical matching** identifies KG entities whose normalized names occur directly in the question. These direct matches are assigned a seed score of `1.0`.
+- **lexical matching** — entity names explicitly appearing in the normalized question receive a seed score of `1.0`;
+- **semantic matching** — the query embedding is compared with stored entity embeddings using cosine similarity.
 
-**Semantic matching** embeds the complete query and compares it with the stored KG entity embeddings using cosine similarity. The top semantic entities are added as additional seeds.
-
-Duplicate lexical and semantic matches are merged, with lexical matches taking priority.
+The two result sets are merged, with lexical matches taking priority when the same entity appears in both.
 
 ### 9.2 Graph Expansion
 
-The seed entities are used as entry points into a NetworkX `MultiDiGraph`.
+Seed entities are used as entry points into a NetworkX `MultiDiGraph`.
 
-The retriever follows both incoming and outgoing graph edges up to:
+The retriever follows both incoming and outgoing edges up to:
 
 ```env
 GRAPH_MAX_HOPS=2
 ```
 
-All triples reached during this stage form a **candidate triple set**. The candidate set is not immediately truncated to the final context size.
+All reached relations form a candidate triple set. The candidate set is intentionally collected before applying the final context-size limit.
 
 ### 9.3 Query-Aware Triple Reranking
 
@@ -345,21 +322,21 @@ Each candidate triple is serialized as:
 subject predicate object
 ```
 
-and embedded with the same embedding model used for entity linking.
+and embedded for comparison with the query.
 
-Candidate triples are then scored using three factors:
+The final score combines semantic relevance, seed relevance, and graph distance:
 
 ```text
 final score
 =
-(query–triple semantic similarity × GRAPH_TRIPLE_SIM_WEIGHT)
+(query–triple similarity × GRAPH_TRIPLE_SIM_WEIGHT)
 +
 (seed relevance × GRAPH_SEED_SCORE_WEIGHT)
 -
 (hop penalty)
 ```
 
-With the default configuration:
+Default weights:
 
 ```env
 GRAPH_TRIPLE_SIM_WEIGHT=0.7
@@ -367,76 +344,21 @@ GRAPH_SEED_SCORE_WEIGHT=0.3
 GRAPH_HOP_PENALTY=0.05
 ```
 
-This gives greater importance to triples that are semantically relevant to the query while still considering the relevance of the seed entity and graph distance.
-
-After reranking, only the highest-scoring triples are supplied to the generation model:
+Only the top:
 
 ```env
 GRAPH_MAX_TRIPLES=20
 ```
 
-### 9.4 Answer Generation and Citations
+triples are supplied to the generation model.
 
-The generation model is instructed to answer using **only the retrieved triples**.
-
-Every factual claim must cite its supporting triple directly in the exact format:
-
-```text
-[Subject] -> [Predicate] -> [Object]
-```
-
-For example:
-
-```text
-[Transformer] -> [relies on] -> [self-attention]
-```
-
-If the retrieved triples do not contain enough information, the system is instructed to state that the retrieved knowledge graph is insufficient rather than use outside knowledge.
+The CLI prints the seed entities, candidate count, retrieved triples, semantic scores, final scores, and hop distances to make the retrieval process inspectable.
 
 ---
 
-## 10. Graph RAG Configuration
+## 10. Rebuild the Entity Index
 
-The main Graph RAG retrieval parameters are:
-
-```env
-GRAPH_SEED_K=5
-GRAPH_MAX_HOPS=2
-GRAPH_MAX_TRIPLES=20
-GRAPH_TRIPLE_SIM_WEIGHT=0.7
-GRAPH_SEED_SCORE_WEIGHT=0.3
-GRAPH_HOP_PENALTY=0.05
-```
-
-- `GRAPH_SEED_K`: number of semantic entity matches added to the seed set. Lexical matches are added separately.
-- `GRAPH_MAX_HOPS`: maximum graph expansion depth.
-- `GRAPH_MAX_TRIPLES`: maximum number of reranked triples passed to the LLM.
-- `GRAPH_TRIPLE_SIM_WEIGHT`: weight of query–triple semantic similarity in reranking.
-- `GRAPH_SEED_SCORE_WEIGHT`: weight of the seed entity relevance score.
-- `GRAPH_HOP_PENALTY`: penalty applied to triples reached through additional hops.
-
-The command-line output also displays:
-
-- seed entities and whether they were found lexically or semantically;
-- the number of candidate triples found before reranking;
-- the final retrieved triples;
-- semantic, final, and hop scores for each retrieved triple.
-
-These outputs are useful for inspecting the behavior of the graph retrieval pipeline.
-
----
-
-## 11. Rebuild the Entity Index
-
-The entity embedding index is stored locally at:
-
-```text
-data/entity_index.json
-```
-
-It is automatically reused on later runs.
-
-If `kg_triples.json` is regenerated or the embedding model is changed, delete the existing index before running Graph RAG again.
+If `kg_triples.json` is regenerated or the embedding model is changed, delete the old entity index before running Graph RAG again.
 
 ### Windows
 
@@ -450,75 +372,53 @@ del data\entity_index.json
 rm data/entity_index.json
 ```
 
-Then run:
+The next execution of:
 
 ```bash
 python graph_rag.py
 ```
 
-The entity embeddings will be rebuilt automatically.
+will regenerate the index automatically.
 
 ---
 
 # Vector RAG
 
-## 12. Build and Run the Vector RAG Pipeline
-
-Run:
+## 11. Run Vector RAG
 
 ```bash
 python vector_rag.py
 ```
 
-If no existing ChromaDB collection is found, the program automatically performs:
+If no existing ChromaDB collection is found, the pipeline automatically:
 
-```text
-PDF
- ↓
-Load pages
- ↓
-Split into overlapping text chunks
- ↓
-Generate embeddings
- ↓
-Store chunks in ChromaDB
- ↓
-Start the command-line question-answering interface
-```
+1. loads the PDF pages;
+2. splits them into overlapping text chunks;
+3. embeds the chunks;
+4. stores them in ChromaDB;
+5. starts the command-line interface.
 
-After initialization, the program displays:
-
-```text
-Vector RAG
-Source: Attention Is All You Need
-Type 'exit' to quit.
-
-Question:
-```
-
-For each query, Vector RAG performs:
+For each question:
 
 ```text
 Question
- ↓
+   ↓
 Query embedding
- ↓
+   ↓
 Vector similarity search
- ↓
-Top-k text chunks
- ↓
+   ↓
+Top-5 chunks
+   ↓
 LLM
- ↓
-Answer with source citations
+   ↓
+Answer with [Source n] citations
 ```
 
-The generation model is instructed to answer only from the retrieved text chunks.
+The generation model is instructed to use only the retrieved chunks.
 
 ---
 
-## 13. Vector RAG Configuration
-
-The main Vector RAG settings are:
+## 12. Vector RAG Configuration
 
 ```env
 VECTOR_CHUNK_SIZE=1000
@@ -526,152 +426,180 @@ VECTOR_CHUNK_OVERLAP=150
 VECTOR_TOP_K=5
 ```
 
-- `VECTOR_CHUNK_SIZE`: text chunk size used to construct the vector index.
-- `VECTOR_CHUNK_OVERLAP`: overlap between neighboring chunks.
-- `VECTOR_TOP_K`: number of chunks retrieved for each query.
+- `VECTOR_CHUNK_SIZE`: size of each indexed text chunk;
+- `VECTOR_CHUNK_OVERLAP`: overlap between adjacent chunks;
+- `VECTOR_TOP_K`: number of chunks returned for each query.
 
-The local ChromaDB collection is stored at:
+The persistent local database is stored in:
 
 ```text
 chroma_db/
 ```
 
----
-
-## 14. Rebuild the Vector Database
-
-The existing ChromaDB index is reused on later runs.
-
-If the embedding model, chunk size, or chunk overlap is changed, rebuild the vector database with:
+If the embedding model, chunk size, or chunk overlap changes, rebuild it with:
 
 ```bash
 python vector_rag.py --rebuild
 ```
 
-This deletes the existing local ChromaDB index and recreates it from the source PDF using the current configuration.
+---
+
+# Experimental Evaluation
+
+## 13. Experimental Validation A — Graph RAG vs. Vector RAG
+
+The full raw experiment record is available at:
+
+- [`results/Experimental_Validation_A`](results/Experimental_Validation_A)
+
+Five questions were tested using the default generation profile:
+
+```text
+Temperature = 0.1
+Top-p = 0.3
+```
+
+The questions cover author affiliations, dropout, training data, regularization, and the motivation for self-attention.
+
+### Result Summary
+
+| Query | Graph RAG | Vector RAG |
+|---|---|---|
+| Google Brain authors | Relevant affiliation triples were retrieved, but the final answer omitted one retrieved author. | Returned the three expected affiliations from the source text. |
+| Base dropout rate | Retrieved dropout-related structure, but the numerical value was absent from the KG. | Retrieved and returned `0.1`. |
+| WMT English-German dataset | Retrieved the dataset/sentence-pair relation, but the approximate quantity was absent from the KG. | Returned WMT 2014 English-German and approximately 4.5 million sentence pairs. |
+| Regularization techniques | Retrieved graph evidence was insufficient for the requested techniques and numerical values. | Retrieved context was also insufficient for the complete answer. |
+| Self-attention advantages | Retrieved relevant self-attention relations and produced a partial synthesis. | Produced a partial synthesis directly from retrieved text chunks. |
+
+The experiment highlights several distinct failure modes rather than a single retrieval-quality problem:
+
+- **KG construction loss:** information from the paper may not be preserved as a triple. This was particularly visible for numerical facts such as the dropout rate and dataset size.
+- **Graph retrieval limitations:** useful graph information may exist but be difficult to reach when related concepts are weakly connected or disconnected.
+- **Generation limitations:** a relevant triple may be retrieved but still omitted from the final answer, as occurred in the author-affiliation query.
+
+Vector RAG generally preserved exact quantitative details more reliably because it retrieved text from the original paper rather than a compressed graph representation.
 
 ---
 
-## 15. Generation Parameters
+## 14. Experimental Validation B — Parameter Analysis
 
-Graph RAG and Vector RAG use the same default generation settings:
+The complete parameter experiment is available at:
 
-```env
-TEMPERATURE=0.1
-TOP_P=0.3
-```
+- [`results/Experimental_Validation_B`](results/Experimental_Validation_B)
 
-This allows the retrieval systems to be compared while keeping generation settings consistent.
+The same factual query was evaluated with three generation profiles:
 
-The values can be changed in `.env` for parameter experiments, for example:
+| Profile | Temperature | Top-p |
+|---|---:|---:|
+| 1 | 0.1 | 0.3 |
+| 2 | 0.7 | 0.25 |
+| 3 | 1.4 | 0.98 |
 
-```env
-TEMPERATURE=0.7
-TOP_P=0.25
-```
+Query:
 
-or:
+> Trace the data flow through a single Encoder layer: What are the two distinct sub-layers, and what specific operation is applied around each of them?
 
-```env
-TEMPERATURE=1.4
-TOP_P=0.98
-```
+For Graph RAG, the same retrieved triple set was used across the three generation profiles. For Vector RAG, the same chunks were retrieved; only negligible floating-point differences appeared in the displayed vector distances.
 
-Changing only `TEMPERATURE` or `TOP_P` does not require rebuilding the knowledge graph, entity index, or ChromaDB index.
+### Observed Parameter Effect
+
+The factual content remained highly stable across all three profiles in both systems.
+
+- Graph RAG consistently identified multi-headed self-attention, the position-wise feed-forward network, residual connections, and layer normalization. The highest-temperature response was slightly more concise.
+- Vector RAG produced effectively identical factual answers across the three profiles, with only small stylistic differences.
+
+The limited variation is consistent with the experimental setup: the retrieved evidence was effectively fixed, the question had a narrowly defined factual answer, and both system prompts strongly constrained the model to grounded and concise responses. Under these conditions, increasing `temperature` and `top_p` primarily affected wording rather than factual content.
 
 ---
 
-## 16. Complete Setup and Execution Workflow
+## 15. Full Report
 
-A complete run from a fresh clone is:
+The final written report is included in the repository:
 
-### Step 1 — Create and activate a virtual environment
+- [`results/report.pdf`](results/report.pdf)
+
+It contains the comparison and parameter-analysis discussion based on the recorded experimental outputs.
+
+---
+
+## 16. Reproducing the Experiment
+
+A typical complete workflow is:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### Step 2 — Install dependencies
-
-```bash
+# 1. Install dependencies
 pip install -r requirements.txt
-```
 
-### Step 3 — Create `.env`
-
-```bash
+# 2. Create .env from the template
 copy .env.template .env
-```
 
-Add the OpenAI API key to `.env`.
+# 3. Add an OpenAI API key to .env
 
-### Step 4 — Build or regenerate the knowledge graph
-
-```bash
+# 4. Build / regenerate the knowledge graph
 python build_kg.py
-```
 
-### Step 5 — Run Graph RAG
-
-```bash
+# 5. Run Graph RAG
 python graph_rag.py
-```
 
-### Step 6 — Run Vector RAG
-
-```bash
+# 6. Run Vector RAG
 python vector_rag.py
 ```
 
-To explicitly rebuild the vector database:
+To rebuild the Vector RAG database explicitly:
 
 ```bash
 python vector_rag.py --rebuild
 ```
 
----
+For the parameter experiment, change only:
 
-## 17. Methodological Difference Between the Two Systems
-
-The central difference is the retrieval unit and retrieval process.
-
-### Graph RAG
-
-```text
-Query
-→ hybrid entity linking
-→ graph traversal
-→ graph-derived candidate triples
-→ semantic triple reranking
-→ top triples
-→ LLM
+```env
+TEMPERATURE
+TOP_P
 ```
 
-Embeddings are used to identify relevant graph entry points and to rerank triples that were obtained through graph expansion. The evidence supplied to the LLM remains structured knowledge graph triples.
+while keeping the retrieval configuration fixed.
 
-### Vector RAG
-
-```text
-Query
-→ vector similarity search over document chunks
-→ top text chunks
-→ LLM
-```
-
-The vector retriever directly searches representations of the original document chunks.
-
-This setup allows structured graph-based retrieval to be compared with conventional vector-based semantic retrieval while keeping the source document and generation model consistent.
+Changing only generation parameters does **not** require rebuilding the knowledge graph, entity index, or ChromaDB database.
 
 ---
 
-## 18. Notes on Graph Retrieval
+## 17. Interpretation and Limitations
 
-The quality of Graph RAG depends on two separate stages:
+The experiments show that Graph RAG quality depends on several independent stages:
 
-1. **Knowledge graph construction** — the information must first be represented in `kg_triples.json` by KGGen.
-2. **Graph retrieval** — relevant entities and triples must then be reachable from the selected seed entities and ranked highly enough to enter the final context.
+```text
+Source paper
+   ↓
+KG extraction quality
+   ↓
+Graph connectivity / entity representation
+   ↓
+Seed selection and traversal
+   ↓
+Triple reranking
+   ↓
+Grounded answer generation
+```
 
-Because the generation model is restricted to retrieved triples, information that was not extracted into the knowledge graph cannot be recovered during answer generation. Similarly, semantically relevant information may still be difficult to retrieve when related concepts are weakly connected or disconnected in the generated graph.
+A retrieval algorithm cannot recover a numerical fact that KGGen never extracted into `kg_triples.json`. Conversely, the presence of a correct triple in the graph does not guarantee that it will be reached or used in the final answer.
 
-These behaviors are important when interpreting the experimental comparison between Graph RAG and Vector RAG.
+The current graph also contains entities and relations originating from the paper's reference section. These can introduce retrieval noise and illustrate a practical limitation of automatically generated document-level knowledge graphs.
+
+The Vector RAG baseline avoids KG compression loss because its evidence remains original text, but it is still dependent on chunk boundaries and top-k semantic retrieval. This is visible in the regularization query, where the relevant source passage was not sufficiently represented in the retrieved top-5 chunks.
+
+These observations are central to the comparison: the project evaluates not only answer correctness, but also how the **representation of evidence** changes the failure modes of a RAG system.
+
+---
+
+## 18. Models Used
+
+The repository configuration records the following API model identifiers:
+
+```text
+KG generation:     openai/gpt-4o (through KGGen)
+Answer generation: gpt-4o
+Embeddings:        text-embedding-3-small
+```
+
+The experiment records use these configured identifiers; a separate dated backend snapshot was not recorded.
