@@ -1,0 +1,318 @@
+Experimental Validation A
+Graph RAG vs Vector RAG
+
+
+==================================================
+Query 1
+==================================================
+Who are the specific authors of the paper affiliated with Google Brain?
+
+=========
+Graph RAG
+=========
+
+Seed entities:
+- Google Brain (1.000, lexical)
+- Google (1.000, lexical)
+- Google Research (0.452, semantic)
+- Google’s neural machine translation system: Bridging the gap between human and machine translation (0.403, semantic)
+- Neural Information Processing Systems (NIPS 2017) (0.351, semantic)
+- Extended Neural GPU (0.337, semantic)
+
+Graph candidates:
+- 27 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [Noam Shazeer] -> [affiliated with] -> [Google Brain] (score=0.779, semantic=0.685, hop=1)
+- [Ashish Vaswani] -> [affiliated with] -> [Google Brain] (score=0.773, semantic=0.675, hop=1)
+- [Łukasz Kaiser] -> [affiliated with] -> [Google Brain] (score=0.722, semantic=0.603, hop=1)
+- [Noam Shazeer] -> [is author of] -> [Outrageously large neural networks: The sparsely-gated mixture-of-experts layer] (score=0.530, semantic=0.400, hop=2)
+- [Google] -> [grants permission to reproduce] -> [tables and figures] (score=0.486, semantic=0.266, hop=1)
+- [Llion Jones] -> [affiliated with] -> [Google Research] (score=0.485, semantic=0.499, hop=1)
+- [Jakob Uszkoreit] -> [affiliated with] -> [Google Research] (score=0.460, semantic=0.463, hop=1)
+- [Illia Polosukhin] -> [affiliated with] -> [Google Research] (score=0.459, semantic=0.462, hop=1)
+- [Yonghui Wu] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.454, semantic=0.476, hop=1)
+- [Klaus Macherey] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.453, semantic=0.474, hop=1)
+- [Zhifeng Chen] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.447, semantic=0.466, hop=1)
+- [Niki Parmar] -> [affiliated with] -> [Google Research] (score=0.447, semantic=0.444, hop=1)
+- [Wolfgang Macherey] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.446, semantic=0.465, hop=1)
+- [Yuan Cao] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.445, semantic=0.463, hop=1)
+- [Qin Gao] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.444, semantic=0.462, hop=1)
+- [Maxim Krikun] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.438, semantic=0.453, hop=1)
+- [Mike Schuster] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.434, semantic=0.447, hop=1)
+- [Quoc V Le] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.427, semantic=0.437, hop=1)
+- [Mohammad Norouzi] -> [is author of] -> [Google’s neural machine translation system: Bridging the gap between human and machine translation] (score=0.422, semantic=0.430, hop=1)
+- [Transformer] -> [designed and implemented by] -> [Ashish Vaswani] (score=0.379, semantic=0.184, hop=2)
+
+Answer:
+The specific authors of the paper affiliated with Google Brain are Noam Shazeer and Ashish Vaswani. [Noam Shazeer] -> [affiliated with] -> [Google Brain] and [Ashish Vaswani] -> [affiliated with] -> [Google Brain].
+
+==========
+Vector RAG
+==========
+
+Retrieved chunks:
+- [Source 1] page=1, chunk=3, distance=0.7836
+- [Source 2] page=1, chunk=0, distance=0.9617
+- [Source 3] page=1, chunk=2, distance=0.9636
+- [Source 4] page=12, chunk=44, distance=1.0339
+- [Source 5] page=12, chunk=43, distance=1.0994
+
+Answer:
+The authors of the paper affiliated with Google Brain are Ashish Vaswani, Noam Shazeer, and Łukasz Kaiser [Source 2].
+
+
+==================================================
+Query 2
+==================================================
+What is the base value of the dropout rate applied to the output of each sub-layer?
+
+=========
+Graph RAG
+=========
+
+Seed entities:
+- dropout rate (1.000, lexical)
+- sub-layer (1.000, lexical)
+- dropout (1.000, lexical)
+- Residual Dropout (0.567, semantic)
+- Dropout: a simple way to prevent neural networks from overfitting (0.497, semantic)
+- embedding layers (0.444, semantic)
+- recurrent layers (0.412, semantic)
+
+Graph candidates:
+- 62 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [Residual Dropout] -> [applies to] -> [sub-layer] (score=0.802, semantic=0.717, hop=1)
+- [Transformer (big)] -> [uses] -> [dropout rate] (score=0.701, semantic=0.573, hop=1)
+- [Transformer] -> [benefits from] -> [dropout] (score=0.657, semantic=0.510, hop=1)
+- [Transformer] -> [replaces] -> [recurrent layers] (score=0.591, semantic=0.416, hop=1)
+- [Residual Dropout] -> [applies to] -> [encoder] (score=0.576, semantic=0.579, hop=1)
+- [Residual Dropout] -> [applies to] -> [decoder stacks] (score=0.550, semantic=0.543, hop=1)
+- [Residual Dropout] -> [applies to] -> [embeddings] (score=0.540, semantic=0.528, hop=1)
+- [Residual Dropout] -> [applies to] -> [positional encodings] (score=0.529, semantic=0.512, hop=1)
+- [Transformer] -> [uses] -> [point-wise fully connected layers] (score=0.512, semantic=0.374, hop=2)
+- [Transformer] -> [replaces] -> [convolutional layers] (score=0.491, semantic=0.345, hop=2)
+- [Transformer] -> [part of] -> [encoder-decoder architectures] (score=0.487, semantic=0.339, hop=2)
+- [Ruslan Salakhutdinov] -> [is author of] -> [Dropout: a simple way to prevent neural networks from overfitting] (score=0.466, semantic=0.453, hop=1)
+- [Ilya Sutskever] -> [is author of] -> [Dropout: a simple way to prevent neural networks from overfitting] (score=0.453, semantic=0.435, hop=1)
+- [Alex Krizhevsky] -> [is author of] -> [Dropout: a simple way to prevent neural networks from overfitting] (score=0.447, semantic=0.426, hop=1)
+- [Nitish Srivastava] -> [is author of] -> [Dropout: a simple way to prevent neural networks from overfitting] (score=0.444, semantic=0.422, hop=1)
+- [Geoffrey E Hinton] -> [is author of] -> [Dropout: a simple way to prevent neural networks from overfitting] (score=0.442, semantic=0.419, hop=1)
+- [Transformer] -> [achieves] -> [BLEU scores] (score=0.435, semantic=0.264, hop=2)
+- [Transformer] -> [is a] -> [sequence transduction model] (score=0.434, semantic=0.262, hop=2)
+- [Transformer] -> [compared with] -> [Recurrent Neural Network Grammar] (score=0.432, semantic=0.259, hop=2)
+- [Transformer (big)] -> [achieves] -> [BLEU scores] (score=0.429, semantic=0.255, hop=2)
+
+Answer:
+The retrieved knowledge graph does not contain enough information to determine the base value of the dropout rate applied to the output of each sub-layer.
+
+==========
+Vector RAG
+==========
+
+Retrieved chunks:
+- [Source 1] page=3, chunk=10, distance=1.1740
+- [Source 2] page=6, chunk=21, distance=1.2033
+- [Source 3] page=8, chunk=26, distance=1.2084
+- [Source 4] page=5, chunk=17, distance=1.2247
+- [Source 5] page=9, chunk=33, distance=1.2371
+
+Answer:
+The base value of the dropout rate applied to the output of each sub-layer is 0.1 [Source 3].
+
+
+==================================================
+Query 3
+==================================================
+Which specific dataset was used to train the English-to-German translation task, and approximately how many sentence pairs does that dataset contain?
+
+=========
+Graph RAG
+=========
+
+Seed entities:
+- English-to-German translation (1.000, lexical)
+- sentence pairs (1.000, lexical)
+- translation (1.000, lexical)
+- WMT 2014 English-German dataset (0.625, semantic)
+- WMT 2014 English-to-German translation task (0.513, semantic)
+- WMT 2014 English-French dataset (0.480, semantic)
+- WMT 2014 English-to-German (0.432, semantic)
+
+Graph candidates:
+- 54 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [WMT 2014 English-German dataset] -> [consists of] -> [sentence pairs] (score=0.807, semantic=0.724, hop=1)
+- [WMT 2014 English-French dataset] -> [consists of] -> [sentence pairs] (score=0.715, semantic=0.593, hop=1)
+- [Transformer] -> [achieves BLEU score on] -> [WMT 2014 English-to-German translation task] (score=0.672, semantic=0.532, hop=1)
+- [WMT 2014 English-to-German] -> [is a task in] -> [translation] (score=0.644, semantic=0.492, hop=1)
+- [Transformer] -> [evaluated on] -> [English-to-German translation] (score=0.604, semantic=0.434, hop=1)
+- [WMT 2014 English-to-French] -> [is a task in] -> [translation] (score=0.570, semantic=0.386, hop=1)
+- [sentence pairs] -> [encoded using] -> [byte-pair] (score=0.569, semantic=0.384, hop=1)
+- [Transformer] -> [achieves BLEU score on] -> [WMT 2014 English-to-French translation task] (score=0.558, semantic=0.439, hop=2)
+- [sentence pairs] -> [split into] -> [word-piece vocabulary] (score=0.551, semantic=0.358, hop=1)
+- [Machine Translation] -> [includes] -> [WMT 2014 English-to-German translation task] (score=0.537, semantic=0.548, hop=1)
+- [WMT 2014 English-to-German translation task] -> [achieves] -> [state-of-the-art BLEU score] (score=0.509, semantic=0.507, hop=1)
+- [Transformer] -> [trained on] -> [Penn Treebank] (score=0.499, semantic=0.356, hop=2)
+- [byte-pair] -> [has] -> [source-target vocabulary] (score=0.493, semantic=0.347, hop=2)
+- [sentence representations] -> [include] -> [byte-pair] (score=0.470, semantic=0.314, hop=2)
+- [Transformer] -> [generalizes to] -> [English constituency parsing] (score=0.467, semantic=0.310, hop=2)
+- [Transformer] -> [applied to] -> [English constituency parsing] (score=0.458, semantic=0.298, hop=2)
+- [Transformer] -> [achieves] -> [BLEU scores] (score=0.452, semantic=0.289, hop=2)
+- [Transformer] -> [compared with] -> [learned positional embeddings] (score=0.434, semantic=0.263, hop=2)
+- [Transformer] -> [compared with] -> [Recurrent Neural Network Grammar] (score=0.432, semantic=0.259, hop=2)
+- [Transformer] -> [is planned to be extended to] -> [problems involving input and output modalities other than text] (score=0.428, semantic=0.255, hop=2)
+
+Answer:
+The retrieved knowledge graph does not contain enough information to specify which dataset was used to train the English-to-German translation task or the number of sentence pairs it contains.
+
+==========
+Vector RAG
+==========
+
+Retrieved chunks:
+- [Source 1] page=7, chunk=24, distance=0.7787
+- [Source 2] page=9, chunk=33, distance=0.9101
+- [Source 3] page=8, chunk=26, distance=1.0266
+- [Source 4] page=8, chunk=27, distance=1.0670
+- [Source 5] page=8, chunk=29, distance=1.0737
+
+Answer:
+The dataset used to train the English-to-German translation task was the standard WMT 2014 English-German dataset, which contains approximately 4.5 million sentence pairs [Source 1].
+
+
+==================================================
+Query 4
+==================================================
+Identify the regularization techniques used during the model's training phase, and specify their numerical parameter values.
+
+=========
+Graph RAG
+=========
+
+Seed entities:
+- regularization (1.000, lexical)
+- values (1.000, lexical)
+- hyperparameters (0.483, semantic)
+- code used to train and evaluate models (0.412, semantic)
+- Dropout: a simple way to prevent neural networks from overfitting (0.343, semantic)
+- learning rate (0.342, semantic)
+
+Graph candidates:
+- 37 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [models] -> [employ] -> [regularization] (score=0.717, semantic=0.595, hop=1)
+- [models] -> [compared in] -> [training costs] (score=0.542, semantic=0.417, hop=2)
+- [models] -> [use] -> [Adam optimizer] (score=0.530, semantic=0.400, hop=2)
+- [training regime] -> [describes] -> [models] (score=0.529, semantic=0.398, hop=2)
+- [encoder-decoder attention] -> [uses] -> [values] (score=0.490, semantic=0.272, hop=1)
+- [models] -> [tested on] -> [development set] (score=0.479, semantic=0.327, hop=2)
+- [base models] -> [use] -> [hyperparameters] (score=0.470, semantic=0.464, hop=1)
+- [models] -> [compared in] -> [translation quality] (score=0.461, semantic=0.302, hop=2)
+- [models] -> [compared to] -> [model architectures] (score=0.460, semantic=0.301, hop=2)
+- [models] -> [use] -> [beam search] (score=0.460, semantic=0.301, hop=2)
+- [models] -> [trained on] -> [NVIDIA P100 GPUs] (score=0.460, semantic=0.300, hop=2)
+- [dot-product attention] -> [uses] -> [values] (score=0.456, semantic=0.222, hop=1)
+- [Multi-Head Attention] -> [projects] -> [values] (score=0.445, semantic=0.206, hop=1)
+- [dot-product attention] -> [uses] -> [scaling factor] (score=0.434, semantic=0.263, hop=2)
+- [base models] -> [trained for] -> [training step] (score=0.400, semantic=0.436, hop=2)
+- [dot-product attention] -> [applies] -> [softmax function] (score=0.400, semantic=0.214, hop=2)
+- [encoder-decoder attention] -> [uses] -> [queries] (score=0.400, semantic=0.214, hop=2)
+- [encoder-decoder attention] -> [uses] -> [keys] (score=0.394, semantic=0.205, hop=2)
+- [Multi-Head Attention] -> [yields] -> [output values] (score=0.385, semantic=0.193, hop=2)
+- [Multi-Head Attention] -> [attends to] -> [representation subspaces] (score=0.381, semantic=0.187, hop=2)
+
+Answer:
+The retrieved knowledge graph does not contain enough information to identify the regularization techniques used during the model's training phase or their numerical parameter values.
+
+==========
+Vector RAG
+==========
+
+Retrieved chunks:
+- [Source 1] page=7, chunk=25, distance=0.9076
+- [Source 2] page=9, chunk=33, distance=1.2182
+- [Source 3] page=9, chunk=30, distance=1.2903
+- [Source 4] page=8, chunk=29, distance=1.3048
+- [Source 5] page=9, chunk=31, distance=1.3106
+
+Answer:
+The retrieved context does not contain enough information about the specific regularization techniques used during the model's training phase or their numerical parameter values.
+
+
+==================================================
+Query 5
+==================================================
+"The Transformer relies entirely on attention mechanisms, dispensing with recurrence and convolutions." Synthesize the arguments presented in the paper defending this architectural choice. What are the three primary advantages listed for self-attention?
+
+=========
+Graph RAG
+=========
+
+Seed entities:
+- self-attention (1.000, lexical)
+- convolutions (1.000, lexical)
+- Transformer (1.000, lexical)
+- A decomposable attention model (0.537, semantic)
+- multi-headed self-attention (0.524, semantic)
+- additive attention (0.504, semantic)
+- restricted self-attention (0.493, semantic)
+- attention-based models (0.480, semantic)
+
+Graph candidates:
+- 110 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [Transformer] -> [uses] -> [self-attention] (score=0.768, semantic=0.669, hop=1)
+- [Transformer] -> [relies on] -> [self-attention] (score=0.767, semantic=0.667, hop=1)
+- [Transformer] -> [uses] -> [multi-headed self-attention] (score=0.740, semantic=0.629, hop=1)
+- [restricted self-attention] -> [has] -> [sequential operations] (score=0.701, semantic=0.573, hop=1)
+- [self-attention] -> [has] -> [computational complexity] (score=0.697, semantic=0.568, hop=1)
+- [decoder] -> [uses] -> [multi-headed self-attention] (score=0.679, semantic=0.541, hop=1)
+- [restricted self-attention] -> [has] -> [per-layer complexity] (score=0.673, semantic=0.532, hop=1)
+- [self-attention] -> [has] -> [sequential operations] (score=0.668, semantic=0.526, hop=1)
+- [encoder] -> [uses] -> [multi-headed self-attention] (score=0.667, semantic=0.524, hop=1)
+- [self-attention] -> [are in] -> [encoder] (score=0.665, semantic=0.522, hop=1)
+- [self-attention] -> [are in] -> [decoder] (score=0.664, semantic=0.520, hop=1)
+- [self-attention] -> [yields] -> [interpretable models] (score=0.661, semantic=0.516, hop=1)
+- [self-attention] -> [allows] -> [parallelization] (score=0.660, semantic=0.515, hop=1)
+- [self-attention] -> [is used for] -> [sequence transduction] (score=0.660, semantic=0.514, hop=1)
+- [self-attention] -> [has] -> [per-layer complexity] (score=0.657, semantic=0.509, hop=1)
+- [Jakob Uszkoreit] -> [is author of] -> [A decomposable attention model] (score=0.654, semantic=0.506, hop=1)
+- [self-attention] -> [is combined with] -> [point-wise feed-forward layer] (score=0.652, semantic=0.503, hop=1)
+- [Transformer] -> [varied by] -> [attention heads] (score=0.648, semantic=0.498, hop=1)
+- [self-attention] -> [helps learn] -> [long-range dependencies] (score=0.648, semantic=0.497, hop=1)
+- [attention heads] -> [are from] -> [self-attention] (score=0.638, semantic=0.484, hop=1)
+
+Answer:
+The paper defends the architectural choice of using self-attention in the Transformer by highlighting three primary advantages:
+
+1. Self-attention allows for parallelization, which is beneficial for computational efficiency and speed. [self-attention] -> [allows] -> [parallelization]
+
+2. Self-attention helps learn long-range dependencies, which is crucial for capturing relationships in sequences that are far apart. [self-attention] -> [helps learn] -> [long-range dependencies]
+
+3. Self-attention yields interpretable models, making it easier to understand and analyze the model's decision-making process. [self-attention] -> [yields] -> [interpretable models]
+
+==========
+Vector RAG
+==========
+
+Retrieved chunks:
+- [Source 1] page=2, chunk=7, distance=0.6059
+- [Source 2] page=2, chunk=5, distance=0.7393
+- [Source 3] page=1, chunk=0, distance=0.7521
+- [Source 4] page=1, chunk=1, distance=0.7640
+- [Source 5] page=2, chunk=8, distance=0.7871
+
+Answer:
+The paper argues for the Transformer architecture, which relies entirely on attention mechanisms, dispensing with recurrence and convolutions, due to several advantages. The three primary advantages of self-attention mentioned are:
+
+1. **Parallelization**: The Transformer allows for significantly more parallelization compared to models that use recurrence, which leads to faster training times [Source 4].
+
+2. **Modeling Dependencies**: Attention mechanisms enable the modeling of dependencies without regard to their distance in the input or output sequences, which is a fundamental constraint in sequential computation models [Source 2].
+
+3. **Performance**: The Transformer achieves superior quality in tasks such as machine translation, as evidenced by its state-of-the-art BLEU scores on the WMT 2014 English-to-German and English-to-French translation tasks [Source 4].

@@ -1,0 +1,111 @@
+Experimental Validation B
+Parameter Analysis
+
+
+Query:
+Trace the data flow through a single Encoder layer: What are the two distinct sub-layers, and what specific operation is applied around each of them?
+
+
+==================================================
+Graph RAG
+==================================================
+
+Seed entities:
+- sub-layer (1.000, lexical)
+- encoder (1.000, lexical)
+- encoder-decoder structure (0.555, semantic)
+- embedding layers (0.550, semantic)
+- encoder-decoder architectures (0.479, semantic)
+- convolutional layers (0.476, semantic)
+- point-wise feed-forward layer (0.475, semantic)
+
+Graph candidates:
+- 73 candidate triples before reranking
+
+Retrieved triples after reranking:
+- [encoder] -> [part of] -> [encoder-decoder structure] (score=0.664, semantic=0.521, hop=1)
+- [Residual Dropout] -> [applies to] -> [encoder] (score=0.644, semantic=0.492, hop=1)
+- [encoder] -> [employ] -> [layer normalization] (score=0.643, semantic=0.489, hop=1)
+- [encoder] -> [uses] -> [position-wise fully connected feed-forward network] (score=0.634, semantic=0.478, hop=1)
+- [Residual Dropout] -> [applies to] -> [sub-layer] (score=0.622, semantic=0.460, hop=1)
+- [self-attention] -> [are in] -> [encoder] (score=0.613, semantic=0.446, hop=1)
+- [encoder] -> [uses] -> [multi-headed self-attention] (score=0.603, semantic=0.432, hop=1)
+- [decoder] -> [employ] -> [layer normalization] (score=0.601, semantic=0.502, hop=2)
+- [encoder] -> [employ] -> [residual connection] (score=0.564, semantic=0.377, hop=1)
+- [self-attention] -> [is combined with] -> [point-wise feed-forward layer] (score=0.554, semantic=0.362, hop=1)
+- [decoder] -> [uses] -> [position-wise fully connected feed-forward network] (score=0.554, semantic=0.434, hop=2)
+- [Residual Dropout] -> [applies to] -> [decoder stacks] (score=0.545, semantic=0.422, hop=2)
+- [decoder] -> [part of] -> [encoder-decoder structure] (score=0.532, semantic=0.522, hop=1)
+- [Transformer] -> [part of] -> [encoder-decoder architectures] (score=0.526, semantic=0.546, hop=1)
+- [Residual Dropout] -> [applies to] -> [positional encodings] (score=0.525, semantic=0.393, hop=2)
+- [self-attention] -> [has] -> [per-layer complexity] (score=0.523, semantic=0.389, hop=2)
+- [decoder] -> [uses] -> [multi-headed self-attention] (score=0.505, semantic=0.365, hop=2)
+- [self-attention] -> [are in] -> [decoder] (score=0.492, semantic=0.346, hop=2)
+- [Residual Dropout] -> [applies to] -> [embeddings] (score=0.491, semantic=0.345, hop=2)
+- [decoder] -> [employ] -> [residual connection] (score=0.491, semantic=0.344, hop=2)
+
+=========
+Profile 1
+=========
+Temperature: 0.1
+Top-p: 0.3
+
+Answer:
+In a single Encoder layer, there are two distinct sub-layers: multi-headed self-attention and a position-wise fully connected feed-forward network. The encoder uses multi-headed self-attention [encoder] -> [uses] -> [multi-headed self-attention] and a position-wise fully connected feed-forward network [encoder] -> [uses] -> [position-wise fully connected feed-forward network]. Around each of these sub-layers, a residual connection is employed [encoder] -> [employ] -> [residual connection], and layer normalization is applied [encoder] -> [employ] -> [layer normalization]. Additionally, residual dropout is applied to the sub-layers [Residual Dropout] -> [applies to] -> [sub-layer].
+
+=========
+Profile 2
+=========
+Temperature: 0.7
+Top-p: 0.25
+
+Answer:
+A single Encoder layer consists of two distinct sub-layers: multi-headed self-attention and a position-wise fully connected feed-forward network. The encoder uses multi-headed self-attention [encoder] -> [uses] -> [multi-headed self-attention] and a position-wise fully connected feed-forward network [encoder] -> [uses] -> [position-wise fully connected feed-forward network]. Around each of these sub-layers, the encoder employs a residual connection [encoder] -> [employ] -> [residual connection] and layer normalization [encoder] -> [employ] -> [layer normalization]. Additionally, residual dropout is applied to the sub-layers [Residual Dropout] -> [applies to] -> [sub-layer].
+
+=========
+Profile 3
+=========
+Temperature: 1.4
+Top-p: 0.98
+
+Answer:
+An encoder layer consists of two distinct sub-layers: one is a multi-headed self-attention mechanism, and the other is a position-wise fully connected feed-forward network [encoder] -> [uses] -> [multi-headed self-attention] and [encoder] -> [uses] -> [position-wise fully connected feed-forward network]. Each of these sub-layers has a residual connection applied around it, followed by layer normalization [encoder] -> [employ] -> [residual connection] and [encoder] -> [employ] -> [layer normalization].
+
+
+==================================================
+Vector RAG
+==================================================
+
+Retrieved chunks:
+- [Source 1] page=3, chunk=10, distance=0.8435
+- [Source 2] page=3, chunk=9, distance=0.9044
+- [Source 3] page=5, chunk=15, distance=0.9170
+- [Source 4] page=5, chunk=16, distance=1.0207
+- [Source 5] page=6, chunk=18, distance=1.0425
+
+=========
+Profile 1
+=========
+Temperature: 0.1
+Top-p: 0.3
+
+Answer:
+In a single encoder layer, there are two distinct sub-layers: the first is a multi-head self-attention mechanism, and the second is a position-wise fully connected feed-forward network. Around each of these sub-layers, a residual connection is employed, followed by layer normalization. Specifically, the output of each sub-layer is computed as LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself [Source 2].
+
+=========
+Profile 2
+=========
+Temperature: 0.7
+Top-p: 0.25
+
+Answer:
+In a single encoder layer, there are two distinct sub-layers: the first is a multi-head self-attention mechanism, and the second is a position-wise fully connected feed-forward network. Around each of these sub-layers, a residual connection is employed, followed by layer normalization. Specifically, the output of each sub-layer is computed as LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself [Source 2].
+
+=========
+Profile 3
+=========
+Temperature: 1.4
+Top-p: 0.98
+
+Answer:
+In a single encoder layer of the Transformer model, there are two distinct sub-layers. The first is a multi-head self-attention mechanism, and the second is a position-wise fully connected feed-forward network. Around each of these sub-layers, a residual connection is employed, followed by layer normalization. The output of each sub-layer is described by the formula: LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself [Source 2].
