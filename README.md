@@ -446,30 +446,40 @@ python vector_rag.py --rebuild
 
 # Experimental Evaluation
 
-## 13. Experimental Validation A — Graph RAG vs. Vector RAG
+## 13. Experimental Validation A — Graph RAG vs Vector RAG
 
-The full raw experiment record is available at:
-
-- [`results/Experimental_Validation_A.txt`](results/Experimental_Validation_A.txt)
-
-Five questions were tested using the default generation profile:
+Both Graph RAG and Vector RAG were tested with the default generation profile:
 
 ```text
 Temperature = 0.1
 Top-p = 0.3
 ```
 
-The questions cover author affiliations, dropout, training data, regularization, and the motivation for self-attention.
+On the following queries:
+
+```text
+1. Who are the specific authors of the paper affiliated with Google Brain? 
+2. What is the base value of the dropout rate applied to the output of each sub-layer? 
+3. Which specific dataset was used to train the English-to-German translation task, and approximately how many sentence pairs does that dataset contain? 
+4. Identify the regularization techniques used during the model's training phase, and specify their numerical parameter values. 
+5. "The Transformer relies entirely on attention mechanisms, dispensing with recurrence and convolutions." Synthesize the arguments presented in the paper defending this architectural choice. What are the three primary advantages listed for self-attention?
+```
+
+The full raw experiment record is available at:
+
+- [`results/Experimental_Validation_A.txt`](results/Experimental_Validation_A.txt)
 
 ---
 
 ## 14. Experimental Validation B — Parameter Analysis
 
-The full raw experiment record is available at:
+Both Graph RAG and Vector RAG were tested on the specific query:
 
-- [`results/Experimental_Validation_B.txt`](results/Experimental_Validation_B.txt)
+```text
+Trace the data flow through a single Encoder layer: What are the two distinct sub-layers, and what specific operation is applied around each of them?
+```
 
-The same factual query was evaluated with three generation profiles:
+With three distinct generation profiles:
 
 | Profile | Temperature | Top-p |
 |---|---:|---:|
@@ -477,7 +487,9 @@ The same factual query was evaluated with three generation profiles:
 | 2 | 0.7 | 0.25 |
 | 3 | 1.4 | 0.98 |
 
-For Graph RAG, the same retrieved triple set was used across the three generation profiles. For Vector RAG, the same chunks were retrieved; only negligible floating-point differences appeared in the displayed vector distances.
+The full raw experiment record is available at:
+
+- [`results/Experimental_Validation_B.txt`](results/Experimental_Validation_B.txt)
 
 ---
 
